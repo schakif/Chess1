@@ -10,11 +10,66 @@ public abstract class ChessPiece{
 	private boolean hasMoved;
 	private Location location;
 	private Color color;
+	private boolean thisIsBad = false;//fix this eventually
 	/**
 	 * Returns all valid move locations for a Chess Piece
 	 * @return an ArrayList of Valid Move Locations
 	 */
 	public abstract ArrayList<Location> getValidMoveLocations();
+	
+	public ArrayList<Location> checkLocations(ArrayList<Location> validLocs) {
+		Location curr = getLocation();
+		Color c = getColor();
+		King k;
+		ArrayList<Location> dumbLocs = new ArrayList<Location>();
+		//if you are in check
+		
+		ChessBoard<ChessPiece> b = getChessBoard();
+		ArrayList<King> kings = b.getKingsOnChessBoard();
+		
+		if (kings.get(0).getColor() == c) {
+			k = kings.get(0);
+		}
+		else {
+			k = kings.get(1);
+		}
+		
+		if (k.isInCheck()){
+			
+			for (Location testing : validLocs) {
+				b = getChessBoard();
+				
+				if (b.isChessPieceAtLoc(testing) && b.getChessPieceColorAtLoc(testing) != c){
+					ChessPiece derp = b.getChessPieceAtLoc(testing);
+					derp.removeSelfFromChessBoard();
+					removeSelfFromChessBoard();
+					putSelfInChessBoard(b, testing);
+					//if your own player is in check
+					if (!k.isInCheck()) {
+						dumbLocs.add(testing);
+						//moveLocs.remove(testing);
+					}
+					removeSelfFromChessBoard();
+					putSelfInChessBoard(b, curr);
+					derp.putSelfInChessBoard(b, testing);
+				} else {
+					removeSelfFromChessBoard();
+					putSelfInChessBoard(b, testing);
+					//if your own player is in check
+					if (!k.isInCheck()) {
+						dumbLocs.add(testing);
+						//moveLocs.remove(testing);
+					}
+					removeSelfFromChessBoard();
+					putSelfInChessBoard(b, curr);
+				}
+			}
+			validLocs = dumbLocs;
+		}
+		
+		return validLocs;
+	}
+	
 	
 	public void setHasMoved(boolean hasMoved){
 		this.hasMoved = hasMoved;
@@ -153,5 +208,12 @@ public abstract class ChessPiece{
 	public String toString() {
 		return getClass().getName() + "[location=" + location + ",color="
 				+ color + "]";
+	}
+
+	public boolean isThisBad() {
+		return thisIsBad;
+	}
+	public void thisIsBad(boolean i){
+		thisIsBad = i;
 	}
 }

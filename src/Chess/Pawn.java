@@ -29,56 +29,25 @@ public class Pawn extends ChessPiece {
 		// get capture locations
 		validLocs.addAll(getCaptureDirections());
 		
-		//Check Mate Purposes....
-		Location curr = super.getLocation();
-		Color c = super.getColor();
-		King k;
-		ArrayList<Location> dumbLocs = new ArrayList<Location>(4);
-		//if you are in check
-		
-		ChessBoard<ChessPiece> b = super.getChessBoard();
-		ArrayList<King> kings = b.getKingsOnChessBoard();
-		if (kings.get(0).getColor() == c) {
-			k = kings.get(0);
-		}
-		else {
-			k = kings.get(1);
-		}
-		if (k.isInCheck()){
+		if (super.isThisBad()) {
+			//Check Mate Purposes....
+			Color c = super.getColor();
+			King k;
+			//if you are in check
 			
-			for (Location testing : validLocs) {
-				b = super.getChessBoard();
-				
-				if (b.isChessPieceAtLoc(testing) && b.getChessPieceColorAtLoc(testing) != c){
-					ChessPiece derp = b.getChessPieceAtLoc(testing);
-					derp.removeSelfFromChessBoard();
-					super.removeSelfFromChessBoard();
-					super.putSelfInChessBoard(b, testing);
-					//if your own player is in check
-					if (!k.isInCheck()) {
-						dumbLocs.add(testing);
-						//moveLocs.remove(testing);
-					}
-					super.removeSelfFromChessBoard();
-					super.putSelfInChessBoard(b, curr);
-					derp.putSelfInChessBoard(b, testing);
-				} else {
-					super.removeSelfFromChessBoard();
-					super.putSelfInChessBoard(b, testing);
-					//if your own player is in check
-					if (!k.isInCheck()) {
-						dumbLocs.add(testing);
-						//moveLocs.remove(testing);
-					}
-					super.removeSelfFromChessBoard();
-					super.putSelfInChessBoard(b, curr);
-				}
+			ChessBoard<ChessPiece> b = super.getChessBoard();
+			ArrayList<King> kings = b.getKingsOnChessBoard();
+			if (kings.get(0).getColor() == c) {
+				k = kings.get(0);
+			}
+			else {
+				k = kings.get(1);
+			}
+			if (k.isInCheck()){
+				validLocs = super.checkLocations(validLocs);
 			}
 		}
-		else {
-			dumbLocs = validLocs;
-		}
-		return dumbLocs;
+		return validLocs;
 		
 
 	}

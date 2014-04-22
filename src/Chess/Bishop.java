@@ -21,6 +21,24 @@ public class Bishop extends ChessPiece {
 		validLocs.addAll(checkValidLocInDirection(Location.SOUTHWEST));
 		validLocs.addAll(checkValidLocInDirection(Location.NORTHWEST));
 		
+		if(super.isThisBad()) {
+	 		//Check Mate Purposes....
+			Color c = super.getColor();
+			King k;
+			//if you are in check
+			
+			ChessBoard<ChessPiece> b = super.getChessBoard();
+			ArrayList<King> kings = b.getKingsOnChessBoard();
+			if (kings.get(0).getColor() == c) {
+				k = kings.get(0);
+			}
+			else {
+				k = kings.get(1);
+			}
+			if (k.isInCheck()){
+				validLocs = super.checkLocations(validLocs);
+			}
+ 		}
 		
 		return validLocs;
 	}

@@ -90,7 +90,10 @@ public class ChessBoard<E extends ChessPiece> extends BoundedGrid<E> {
 	public ArrayList<Location> getMoveLocationsForLocation(Location loc) {
 		ChessPiece cCP = getChessPieceAtLoc(loc);
 		if (cCP != null) {
-			return getChessPieceAtLoc(loc).getValidMoveLocations();
+			cCP.thisIsBad(true);
+			ArrayList<Location> temp =getChessPieceAtLoc(loc).getValidMoveLocations(); 
+			cCP.thisIsBad(false);
+			return temp;
 		}
 		return null;
 	}

@@ -25,8 +25,13 @@ public class King extends ChessPiece {
 				moveLocs.add(adjLoc);
 			}
 		}
-		//Remove king
 		
+		if (isInCheck()) {
+			moveLocs = super.checkLocations(moveLocs);
+		}
+		
+		//Remove king
+		/*
 		Location curr = super.getLocation();
 		Color c = super.getColor();
 		
@@ -57,11 +62,11 @@ public class King extends ChessPiece {
 				super.putSelfInChessBoard(b, curr);
 			}
 		}
-		
+		*/
 		
 		// don't forget castle locations
-		dumbLocs.addAll(getValidCastleLocations());
-		return dumbLocs;
+		moveLocs.addAll(getValidCastleLocations());
+		return moveLocs;
 	}
 
 	/**
